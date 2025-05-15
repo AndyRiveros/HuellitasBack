@@ -10,6 +10,7 @@ import lombok.Setter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -22,10 +23,15 @@ public class Usuario {
     private Long id;
     private String nombreUsuario;
     private String clave;
+    private String mail;
+    private String nombre;
+    private String apellido;
+    private String direccion;
+    private Long DNI;
+    private Long telefono;
+
     @Enumerated(EnumType.STRING)
     private Rol rol;
-
-
 
     // Método para encriptar la clave
     public String encriptarClave(String clave) throws NoSuchAlgorithmException {

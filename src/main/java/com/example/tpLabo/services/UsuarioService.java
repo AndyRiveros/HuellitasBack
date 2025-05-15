@@ -33,7 +33,19 @@ public class UsuarioService {
     }
 
     public Usuario updateUsuario(Usuario usuario) {
-        return usuarioRepository.save(usuario);
+        Optional<Usuario> existingUsuario = usuarioRepository.findById(usuario.getId());
+        if (existingUsuario.isPresent()) {
+            Usuario updatedUsuario = existingUsuario.get();
+            updatedUsuario.setNombre(usuario.getNombre());
+            updatedUsuario.setApellido(usuario.getApellido());
+            updatedUsuario.setDireccion(usuario.getDireccion());
+            updatedUsuario.setDNI(usuario.getDNI());
+            updatedUsuario.setMail(usuario.getMail());
+            updatedUsuario.setTelefono(usuario.getTelefono());
+            updatedUsuario.setRol(usuario.getRol());
+            return usuarioRepository.save(updatedUsuario);
+        }
+        return null;
     }
 
     public void deleteUsuario(Long id) {
