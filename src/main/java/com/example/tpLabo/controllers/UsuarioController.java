@@ -19,19 +19,13 @@ public class UsuarioController {
 
     @PostMapping
     public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario) {
-        // Busca un usuario existente con el mismo nombre
         Usuario existingUsuario = usuarioService.findByNombreUsuario(usuario.getNombreUsuario());
-
-        // Si el usuario ya existe, devuelve un estado de conflicto
         if (existingUsuario != null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-
-        // Si el usuario no existe, crea uno nuevo
         Usuario newUsuario = usuarioService.createUsuario(usuario);
         return new ResponseEntity<>(newUsuario, HttpStatus.CREATED);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> getUsuario(@PathVariable Long id) {
@@ -41,14 +35,19 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
-    public Usuario updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+    public ResponseEntity<Usuario> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
         usuario.setId(id);
-        return usuarioService.updateUsuario(usuario);
+        Usuario updatedUsuario = usuarioService.updateUsuario(usuario);
+        if (updatedUsuario != null) {
+            return ResponseEntity.ok(updatedUsuario);
+        }
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUsuario(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
         usuarioService.deleteUsuario(id);
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
