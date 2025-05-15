@@ -26,7 +26,7 @@ public class PedidoDetalle {
     private Pedido pedido;
 
     @ManyToOne
-    @JoinColumn(name = "idInstrumento", referencedColumnName = "id")
-    @JsonBackReference(value = "instrumento-detalles")
-    private Instrumento instrumento;
+    @JoinColumn(name = "idProducto", referencedColumnName = "id")
+    @JsonBackReference(value = "producto-detalles")
+    private Producto producto;
 }

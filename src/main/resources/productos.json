@@ -1,0 +1,112 @@
+ [
+   {
+    "id":"1",
+    "producto": "producto nuevo",
+    "marca": "caminar",
+    "modelo": "hola",
+    "imagen": "/img/nro10.jpg",
+    "precio": "2450",
+    "costoEnvio": "G",
+    "cantidadVendida": "28",
+    "descripcion": "Estas apreciando un nuevo producto"
+  },
+    {
+      "id":"2",
+      "producto": "sin nombre ",
+      "marca": "Sin marca",
+      "modelo": "modelo",
+      "imagen": "img/nro9.jpg",
+      "precio": "325",
+      "costoEnvio": "150",
+      "cantidadVendida": "10",
+      "descripcion": " que buena descripcion"
+    },
+    {
+      "id":"3",
+      "producto": "que nombre le pongo?",
+      "marca": "nueva marca",
+      "modelo": "24",
+      "imagen": "img/nro8.jpg",
+      "precio": "260",
+      "costoEnvio": "250",
+      "cantidadVendida": "3",
+      "descripcion": "no tenemos nada para decir de esto"
+    },
+    {
+      "id":"4",
+      "producto": "Barra de proteína ",
+      "marca": "PERROS Y GATOS",
+      "modelo": "LATINOAMÉRICA",
+      "imagen": "img/nro7.jpg",
+      "precio": "2250",
+      "costoEnvio": "G",
+      "cantidadVendida": "2",
+      "descripcion": "A y B"
+    },
+    {
+      "id":"5",
+      "producto": "Artesanía. ",
+      "marca": "no es una artesania, es comida para perros",
+      "modelo": "Cuentas ",
+      "imagen": "img/nro6.jpg",
+      "precio": "850",
+      "costoEnvio": "300",
+      "cantidadVendida": "5",
+      "descripcion": "Original."
+    },
+    {
+      "id":"6",
+      "producto": "Aleman Perro. ",
+      "marca": "de raza",
+      "modelo": "asaojfaf",
+      "imagen": "img/nro3.jpg",
+      "precio": "17000",
+      "costoEnvio": "2000",
+      "cantidadVendida": "0",
+      "descripcion": "Buen dia! calidad."
+    },
+    {
+      "id":"7",
+      "producto": "Mayo 2025",
+      "marca": "Mayooo",
+      "modelo": "cualquiera",
+      "imagen": "img/nro4.jpg",
+      "precio": "500",
+      "costoEnvio": "G",
+      "cantidadVendida": "5",
+      "descripcion": "adecuado para 3-6 años de edad"
+    },
+    {
+      "id":"8",
+      "producto": "Enero",
+      "marca": "Febrero",
+      "modelo": "01",
+      "imagen": "img/nro2.jpg",
+      "precio": "2250",
+      "costoEnvio": "G",
+      "cantidadVendida": "1375",
+      "descripcion": "Marzo"
+    },
+    {
+      "id":"9",
+      "producto": "Abril ",
+      "marca": "Mayo",
+      "modelo": "Junio",
+      "imagen": "img/nro1.jpg",
+      "precio": "2700",
+      "costoEnvio": "300",
+      "cantidadVendida": "15",
+      "descripcion": "Completísimo producto."
+    },
+    {
+      "id":"10",
+      "producto": "Correa ",
+      "marca": "Correas correa",
+      "modelo": "cachorros",
+      "imagen": "img/nro5.jpg",
+      "precio": "850",
+      "costoEnvio": "250",
+      "cantidadVendida": "380",
+      "descripcion": "DESCRIPCIÓN: DE 1 A 3 AÑOS"
+    }
+  ]

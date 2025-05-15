@@ -1,6 +1,6 @@
 package com.example.tpLabo.services;
 
-import com.example.tpLabo.entities.Instrumento;
+import com.example.tpLabo.entities.Producto;
 import com.example.tpLabo.entities.Pedido;
 import com.example.tpLabo.entities.PedidoDetalle;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -59,7 +59,7 @@ public class ExcelManager {
         cell.setCellValue("Fecha Pedido");
         cell.setCellStyle(style);
         cell = row.createCell(++nroColumna);
-        cell.setCellValue("Instrumento");
+        cell.setCellValue("Producto");
         cell.setCellStyle(style);
         cell = row.createCell(++nroColumna);
         cell.setCellValue("Marca");
@@ -92,17 +92,17 @@ public class ExcelManager {
                 cell.setCellValue(pedido.getFechaPedido());
                 cell.setCellStyle(dateCellStyle);
                 cell = row.createCell(++nroColumna);
-                cell.setCellValue(detalle.getInstrumento().getInstrumento());
+                cell.setCellValue(detalle.getProducto().getProducto());
                 cell = row.createCell(++nroColumna);
-                cell.setCellValue(detalle.getInstrumento().getMarca());
+                cell.setCellValue(detalle.getProducto().getMarca());
                 cell = row.createCell(++nroColumna);
-                cell.setCellValue(detalle.getInstrumento().getModelo());
+                cell.setCellValue(detalle.getProducto().getModelo());
                 cell = row.createCell(++nroColumna);
                 cell.setCellValue(detalle.getCantidad());
                 cell = row.createCell(++nroColumna);
-                cell.setCellValue(detalle.getInstrumento().getPrecio());
+                cell.setCellValue(detalle.getProducto().getPrecio());
                 cell = row.createCell(++nroColumna);
-                double precio = Double.parseDouble(detalle.getInstrumento().getPrecio());
+                double precio = Double.parseDouble(detalle.getProducto().getPrecio());
                 double subtotal = detalle.getCantidad() * precio;
                 cell.setCellValue(subtotal);
                 ++nroFila;
@@ -141,10 +141,10 @@ public class ExcelManager {
             Class.forName("com.mysql.jdbc.Driver");
             conexion = DriverManager.getConnection(urlConexion, usuario, clave);
 
-            PreparedStatement ps = conexion.prepareStatement("SELECT p.*, i.instrumento, i.marca, i.modelo, i.precio, d.cantidad " +
+            PreparedStatement ps = conexion.prepareStatement("SELECT p.*, i.producto, i.marca, i.modelo, i.precio, d.cantidad " +
                     "FROM pedido p " +
                     "JOIN pedido_detalle d ON p.id = d.id_pedido " +
-                    "JOIN instrumento i ON d.id_instrumento = i.id " +
+                    "JOIN producto i ON d.id_producto = i.id " +
                     "WHERE p.fecha_pedido >= ? AND p.fecha_pedido <= ?");
             ps.setDate(1, new java.sql.Date(fechaDesde.getTime()));
             ps.setDate(2, new java.sql.Date(fechaHasta.getTime()));
@@ -158,8 +158,8 @@ public class ExcelManager {
                 pedido.setTotalPedido(rs.getDouble("total_pedido"));
                 PedidoDetalle detalle = new PedidoDetalle();
                 detalle.setCantidad(rs.getInt("cantidad"));
-                detalle.setInstrumento(new Instrumento(
-                        rs.getString("instrumento"),
+                detalle.setProducto(new Producto(
+                        rs.getString("producto"),
                         rs.getString("marca"),
                         rs.getString("modelo"),
                         rs.getString("precio")
