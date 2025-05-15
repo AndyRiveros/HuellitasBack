@@ -7,20 +7,18 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @Entity
 
-public class Instrumento {
+public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String instrumento;
+    private String producto;
     private String marca;
     private String modelo;
     private String imagen;
@@ -29,8 +27,8 @@ public class Instrumento {
     private Integer cantidadVendida;
     private String descripcion;
 
-    public Instrumento(String instrumento, String marca, String modelo, String precio) {
-        this.instrumento = instrumento;
+    public Producto(String producto, String marca, String modelo, String precio) {
+        this.producto = producto;
         this.marca = marca;
         this.modelo = modelo;
         this.precio = precio;
@@ -53,8 +51,8 @@ public class Instrumento {
     @JsonBackReference
     private Categoria categoria;
 
-//    @OneToMany(mappedBy = "instrumento", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JsonManagedReference(value = "instrumento-detalles")
+//    @OneToMany(mappedBy = "Producto", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JsonManagedReference(value = "Producto-detalles")
 //    private List<PedidoDetalle> detalles;
 
     @Transient

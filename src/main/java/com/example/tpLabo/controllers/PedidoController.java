@@ -3,7 +3,7 @@ package com.example.tpLabo.controllers;
 import com.example.tpLabo.entities.Pedido;
 import com.example.tpLabo.services.ChartsGoogle;
 import com.example.tpLabo.services.ExcelManager;
-import com.example.tpLabo.services.InstrumentoPDF;
+import com.example.tpLabo.services.ProductoPDF;
 import com.example.tpLabo.services.PedidoService;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,11 +59,11 @@ public class PedidoController {
     @GetMapping("/api/pedidos/piechart")
     public List<List<Object>> getPieChartData() {
         List<List<Object>> data = new ArrayList<>();
-        data.add(Arrays.asList("Instrumento", "Cantidad de Pedidos"));
+        data.add(Arrays.asList("Producto", "Cantidad de Pedidos"));
 
         List<Map<String, Object>> datos = chartGoogle.getDatosChartPie();
         for (Map<String, Object> row : datos) {
-            data.add(Arrays.asList(row.get("instrumento"), row.get("cantidad")));
+            data.add(Arrays.asList(row.get("producto"), row.get("cantidad")));
         }
         return data;
     }
@@ -92,12 +92,12 @@ public class PedidoController {
         }
     }
 
-    @GetMapping("api/pedidos/downloadPdf/{idInstrumento}")
-    public ResponseEntity<byte[]> downloadPdf(@PathVariable String idInstrumento) {
+    @GetMapping("api/pedidos/downloadPdf/{idProducto}")
+    public ResponseEntity<byte[]> downloadPdf(@PathVariable String idProducto) {
         try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            InstrumentoPDF mPrintInstrumento = new InstrumentoPDF();
+            ProductoPDF mPrintProducto = new ProductoPDF();
             // Crear un nuevo documento
-            mPrintInstrumento.imprimirInstrumentoPdf(Long.parseLong(idInstrumento), outputStream);
+            mPrintProducto.imprimirProductoPdf(Long.parseLong(idProducto), outputStream);
 
             // Establecer las cabeceras de la respuesta
             HttpHeaders headers = new HttpHeaders();

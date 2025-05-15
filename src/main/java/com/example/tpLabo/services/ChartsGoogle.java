@@ -22,10 +22,10 @@ public class ChartsGoogle
     }
 
     public List<Map<String, Object>> getDatosChartPie() {
-        String sql = "SELECT i.instrumento AS instrumento, COUNT(dp.id) AS cantidad " +
+        String sql = "SELECT i.producto AS producto, COUNT(dp.id) AS cantidad " +
                 "FROM pedido_detalle dp " +
-                "JOIN instrumento i ON dp.id_instrumento = i.id " +
-                "GROUP BY i.instrumento " +
+                "JOIN producto i ON dp.id_producto = i.id " +
+                "GROUP BY i.producto " +
                 "ORDER BY cantidad DESC";
 
         return jdbcTemplate.queryForList(sql);

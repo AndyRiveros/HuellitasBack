@@ -1,6 +1,6 @@
 package com.example.tpLabo.services;
 
-import com.example.tpLabo.entities.Instrumento;
+import com.example.tpLabo.entities.Producto;
 import com.lowagie.text.*;
 import com.lowagie.text.Font;
 import com.lowagie.text.Image;
@@ -17,7 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.sql.*;
 @Service
-public class InstrumentoPDF {
+public class ProductoPDF {
     String urlConexion = "jdbc:mysql://localhost:3306/tp3";
     String usuario = "root";
     String clave = "root";
@@ -28,11 +28,11 @@ public class InstrumentoPDF {
     protected static Font textoBold = new Font(Font.HELVETICA, 12, Font.BOLD);
 
     public static void addMetaData(Document document) {
-        document.addTitle("Detalle del Instrumento");
-        document.addSubject("Instrumento");
-        document.addKeywords("Instrumento, PDF, Detalle");
-        document.addAuthor("Perez Lautaro");
-        document.addCreator("Perez Lautaro");
+        document.addTitle("Detalle del Producto");
+        document.addSubject("Producto");
+        document.addKeywords("Producto, PDF, Detalle");
+        document.addAuthor("Riveros Andres");
+        document.addCreator("Riveros Andres");
     }
 
     public static void addEmptyLine(Document document, int number) {
@@ -72,12 +72,12 @@ public class InstrumentoPDF {
         table.addCell(emptyCell);
     }
 
-    public void imprimirInstrumentoPdf(Long idInstrumento, ByteArrayOutputStream outputStream) throws SQLException {
+    public void imprimirProductoPdf(Long idProducto, ByteArrayOutputStream outputStream) throws SQLException {
         try {
             Document document = new Document(PageSize.A4, 30, 30, 30, 30);
             addMetaData(document);
 
-            Instrumento instrumento = getInstrumentoById(idInstrumento);
+            Producto producto = getProductoById(idProducto);
 
             PdfWriter.getInstance(document, outputStream);
             document.open();
@@ -126,11 +126,11 @@ public class InstrumentoPDF {
             leftColumn.setWidthPercentage(100);
 
             // Agregar imagen
-            Image imgInstrumento = Image.getInstance(instrumento.getImagen());
-            imgInstrumento.scaleAbsolute(150f, 150f);
-            imgInstrumento.setAlignment(Image.ALIGN_CENTER);
+            Image imgProducto = Image.getInstance(producto.getImagen());
+            imgProducto.scaleAbsolute(150f, 150f);
+            imgProducto.setAlignment(Image.ALIGN_CENTER);
 
-            PdfPCell cellImg = new PdfPCell(imgInstrumento);
+            PdfPCell cellImg = new PdfPCell(imgProducto);
             cellImg.setBorder(Rectangle.NO_BORDER);
             cellImg.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
             leftColumn.addCell(cellImg);
@@ -139,7 +139,7 @@ public class InstrumentoPDF {
             PdfPCell descriptionCell = new PdfPCell();
             descriptionCell.setBorder(Rectangle.NO_BORDER);
             descriptionCell.addElement(new Paragraph("Descripción:", subtitulo));
-            descriptionCell.addElement(new Paragraph(instrumento.getDescripcion(), texto));
+            descriptionCell.addElement(new Paragraph(producto.getDescripcion(), texto));
             leftColumn.addCell(descriptionCell);
 
             PdfPCell leftColumnCell = new PdfPCell(leftColumn);
@@ -150,12 +150,12 @@ public class InstrumentoPDF {
             PdfPTable rightColumn = new PdfPTable(1);
             rightColumn.setWidthPercentage(100);
 
-            addCellToTable(rightColumn, "", String.valueOf(instrumento.getCantidadVendida())+" vendidos");
+            addCellToTable(rightColumn, "", String.valueOf(producto.getCantidadVendida())+" vendidos");
 
             // Agregar el título en la columna derecha
-            Paragraph tituloInstrumento = new Paragraph(instrumento.getInstrumento().toUpperCase(), titulo);
-            tituloInstrumento.setAlignment(Paragraph.ALIGN_LEFT);
-            PdfPCell celdaTitulo = new PdfPCell(tituloInstrumento);
+            Paragraph tituloProducto = new Paragraph(producto.getProducto().toUpperCase(), titulo);
+            tituloProducto.setAlignment(Paragraph.ALIGN_LEFT);
+            PdfPCell celdaTitulo = new PdfPCell(tituloProducto);
             celdaTitulo.setBorder(Rectangle.NO_BORDER);
             celdaTitulo.setHorizontalAlignment(PdfPCell.ALIGN_LEFT);
             rightColumn.addCell(celdaTitulo);
@@ -163,10 +163,10 @@ public class InstrumentoPDF {
             // Crear una celda que contenga la marca y el modelo
             Phrase marcaModelo = new Phrase();
             marcaModelo.add(new Chunk("\nMarca: ", textoBold));
-            marcaModelo.add(new Chunk(instrumento.getMarca(), texto));
+            marcaModelo.add(new Chunk(producto.getMarca(), texto));
 
             marcaModelo.add(new Chunk("\n\nModelo: ", textoBold));
-            marcaModelo.add(new Chunk(instrumento.getModelo(), texto));
+            marcaModelo.add(new Chunk(producto.getModelo(), texto));
 
             PdfPCell marcaModeloCell = new PdfPCell(marcaModelo);
             marcaModeloCell.setBorder(Rectangle.NO_BORDER);
@@ -174,10 +174,10 @@ public class InstrumentoPDF {
             addEmptyLineToTable(rightColumn); // Agregar espacio vertical
 
             Phrase costoCelda;
-            if (instrumento.getCostoEnvio().equals("G")) {
+            if (producto.getCostoEnvio().equals("G")) {
                 costoCelda = new Phrase("Envío gratis a todo el país", new Font(Font.HELVETICA, 12, Font.NORMAL, Color.GREEN));
             } else {
-                costoCelda = new Phrase("Costo de Envio: $" + instrumento.getCostoEnvio(), new Font(Font.HELVETICA, 12, Font.NORMAL, Color.ORANGE));
+                costoCelda = new Phrase("Costo de Envio: $" + producto.getCostoEnvio(), new Font(Font.HELVETICA, 12, Font.NORMAL, Color.ORANGE));
             }
             PdfPCell costoCeldaPC = new PdfPCell(costoCelda);
             costoCeldaPC.setBorder(Rectangle.NO_BORDER);
@@ -196,9 +196,9 @@ public class InstrumentoPDF {
         }
     }
 
-    public Instrumento getInstrumentoById(long idInstrumento) throws SQLException{
+    public Producto getProductoById(long idProducto) throws SQLException{
         ResultSet rs = null;
-        Instrumento instrumento = new Instrumento();
+        Producto producto = new Producto();
         Connection conexion = null;
         try {
             Class.forName("com.mysql.jdbc.Driver");
@@ -208,16 +208,16 @@ public class InstrumentoPDF {
 
             // Se realiza la consulta. Los resultados se guardan en el
             // ResultSet rs
-            rs = s.executeQuery("SELECT * from instrumento WHERE id = " + idInstrumento);
+            rs = s.executeQuery("SELECT * from producto WHERE id = " + idProducto);
             while (rs.next()) {
-                instrumento.setId((int) Long.parseLong(rs.getString("id")));
-                instrumento.setInstrumento(rs.getString("instrumento"));
-                instrumento.setMarca(rs.getString("marca"));
-                instrumento.setModelo(rs.getString("modelo"));
-                instrumento.setImagen(rs.getString("imagen"));
-                instrumento.setPrecio(String.valueOf(rs.getDouble("precio")));                instrumento.setCostoEnvio(rs.getString("costo_envio"));
-                instrumento.setCantidadVendida(rs.getInt("cantidad_vendida"));
-                instrumento.setDescripcion(rs.getString("descripcion"));
+                producto.setId((int) Long.parseLong(rs.getString("id")));
+                producto.setProducto(rs.getString("producto"));
+                producto.setMarca(rs.getString("marca"));
+                producto.setModelo(rs.getString("modelo"));
+                producto.setImagen(rs.getString("imagen"));
+                producto.setPrecio(String.valueOf(rs.getDouble("precio")));                producto.setCostoEnvio(rs.getString("costo_envio"));
+                producto.setCantidadVendida(rs.getInt("cantidad_vendida"));
+                producto.setDescripcion(rs.getString("descripcion"));
 
             }
         } catch (Exception e) {
@@ -227,9 +227,9 @@ public class InstrumentoPDF {
             if(conexion != null)
                 conexion.close();
         }
-        return instrumento;
+        return producto;
     }
 
-    private static final Logger logger = LoggerFactory.getLogger(InstrumentoPDF.class);
+    private static final Logger logger = LoggerFactory.getLogger(ProductoPDF.class);
 
 }
