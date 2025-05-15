@@ -21,11 +21,11 @@ public class DataLoader implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // Crear las categorías usando el patrón builder
         List<Categoria> categorias = Arrays.asList(
-                Categoria.builder().id(1).denominacion("Instrumentos de cuerda").build(),
-                Categoria.builder().id(2).denominacion("Percusión").build(),
-                Categoria.builder().id(3).denominacion("Instrumentos de viento").build(),
-                Categoria.builder().id(4).denominacion("Instrumentos de teclado").build(),
-                Categoria.builder().id(5).denominacion("Instrumentos electrónicos").build()
+                Categoria.builder().id(1).denominacion("Alimentos Adultos").build(),
+                Categoria.builder().id(2).denominacion("Alimentos Cachorros").build(),
+                Categoria.builder().id(3).denominacion("Alimentos Gatos Adultos").build(),
+                Categoria.builder().id(4).denominacion("Accesorios generales").build(),
+                Categoria.builder().id(5).denominacion("Ropa").build()
         );
 
         // Guardar las categorías en la base de datos
