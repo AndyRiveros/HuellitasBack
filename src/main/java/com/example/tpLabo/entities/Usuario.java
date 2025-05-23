@@ -33,6 +33,12 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
+    private String imagenPerfil; // Nueva propiedad para la foto de perfil
+
+    public void setImagenPerfil(String imagenPerfil) {
+        this.imagenPerfil = imagenPerfil;
+    }
+
     // Método para encriptar la clave
     public String encriptarClave(String clave) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
