@@ -121,6 +121,10 @@ public class ProductoController {
         productoExistente.setCantidadVendida(productoExistente.getCantidadVendida() + cantidad);
         return productoService.update(id, productoExistente);
     }
+    @GetMapping("/api/productos/buscar")
+    public List<Producto> buscarProductos(@RequestParam("query") String query) {
+        return productoService.buscarPorNombreODescripcion(query);
+    }
 
 //    @GetMapping("/productos")
 //    public String getProductos(Model model) {

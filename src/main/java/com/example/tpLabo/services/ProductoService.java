@@ -51,4 +51,9 @@ public class ProductoService {
     public List<Producto> findByCategoria(int idCategoria) {
         return productoRepository.findByCategoriaId(idCategoria);
     }
+
+    // Método para buscar productos por nombre o descripción
+    public List<Producto> buscarPorNombreODescripcion(String query) {
+        return productoRepository.findByProductoContainingIgnoreCaseOrDescripcionContainingIgnoreCase(query, query);
+    }
 }

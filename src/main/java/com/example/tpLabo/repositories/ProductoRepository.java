@@ -12,5 +12,7 @@ public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     List<Producto> findAll();
     @EntityGraph(attributePaths = "categoria") // Cargar la categoría con el producto
     List<Producto> findByCategoriaId(int idCategoria);
+    // Método de búsqueda por nombre o descripción
+    List<Producto> findByProductoContainingIgnoreCaseOrDescripcionContainingIgnoreCase(String producto, String descripcion);
 
 }
