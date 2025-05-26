@@ -46,6 +46,10 @@ public class UsuarioService {
             updatedUsuario.setMail(usuario.getMail());
             updatedUsuario.setTelefono(usuario.getTelefono());
             updatedUsuario.setRol(usuario.getRol());
+            // Asegúrate de actualizar la imagen
+            if (usuario.getImagenPerfil() != null) {
+                updatedUsuario.setImagenPerfil(usuario.getImagenPerfil());
+            }
             return usuarioRepository.save(updatedUsuario);
         }
         return null;

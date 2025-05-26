@@ -55,11 +55,13 @@ public class UsuarioController {
     public ResponseEntity<String> subirImagen(@PathVariable Long id, @RequestParam("imagen") MultipartFile imagen) {
         try {
             // Crear la carpeta si no existe
-            String carpetaDestino = "src/main/resources/static/img/";
+// Ruta real dentro del contexto del servidor
+            String carpetaDestino = new File("src/main/resources/static/img/").getAbsolutePath() + "/";
             File directorio = new File(carpetaDestino);
             if (!directorio.exists()) {
                 directorio.mkdirs();
             }
+
 
             // Guardar la imagen en la carpeta
             String nombreArchivo = imagen.getOriginalFilename();
@@ -70,12 +72,13 @@ public class UsuarioController {
             Optional<Usuario> usuario = usuarioService.getUsuario(id);
             if (usuario.isPresent()) {
                 Usuario usuarioActualizado = usuario.get();
-                usuarioActualizado.setImagenPerfil("/img/" + nombreArchivo); // Ruta relativa para acceso desde el frontend
+                usuarioActualizado.setImagenPerfil("/uploads/img/" + nombreArchivo);
                 usuarioService.updateUsuario(usuarioActualizado);
             }
 
-            return ResponseEntity.ok("/img/" + nombreArchivo); // Enviar solo la ruta relativa como respuesta
+            return ResponseEntity.ok("/uploads/img/" + nombreArchivo); // ✅ CORRECTO
         } catch (IOException e) {
+            e.printStackTrace(); // <--- AGREGA ESTA LÍNEA
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir imagen");
         }
     }
