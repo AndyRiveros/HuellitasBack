@@ -26,6 +26,10 @@ public class Producto {
     private String costoEnvio;
     private Integer cantidadVendida;
     private String descripcion;
+    private String especie;
+    private String tipo;
+    private String etapa;
+
 
     public Producto(String producto, String marca, String modelo, String precio) {
         this.producto = producto;
