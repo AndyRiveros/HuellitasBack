@@ -46,7 +46,6 @@ public class UsuarioService {
             updatedUsuario.setMail(usuario.getMail());
             updatedUsuario.setTelefono(usuario.getTelefono());
             updatedUsuario.setRol(usuario.getRol());
-            // Asegúrate de actualizar la imagen
             if (usuario.getImagenPerfil() != null) {
                 updatedUsuario.setImagenPerfil(usuario.getImagenPerfil());
             }
@@ -63,7 +62,6 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    // 📸 Nuevo método para subir imágenes de perfil
     public String subirImagen(MultipartFile imagen) {
         try {
             String rutaImagen = "src/main/resources/static/img/" + imagen.getOriginalFilename();
@@ -73,5 +71,15 @@ public class UsuarioService {
             e.printStackTrace();
             return null;
         }
+    }
+
+    // 🔐 Para recuperar por token
+    public Optional<Usuario> getUsuarioPorToken(String token) {
+        return usuarioRepository.findByTokenRecuperacion(token);
+    }
+
+    // 🔐 Para recuperar por email
+    public Optional<Usuario> getUsuarioPorEmail(String email) {
+        return Optional.ofNullable(usuarioRepository.findByMail(email));
     }
 }

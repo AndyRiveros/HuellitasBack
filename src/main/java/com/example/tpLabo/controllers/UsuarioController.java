@@ -8,24 +8,43 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+
+import com.example.tpLabo.dto.ResetearContrasenaRequest;
+import com.example.tpLabo.dto.RecuperarContrasenaRequest;
 import com.example.tpLabo.entities.Usuario;
 import com.example.tpLabo.services.UsuarioService;
+import com.example.tpLabo.services.EmailService;
 
 @RestController
-@CrossOrigin(origins = "*")
+
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping
-    public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario) {
-        Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
-        return ResponseEntity.ok(nuevoUsuario);
+    public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario) {
+        try {
+            Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
+            return ResponseEntity.ok(nuevoUsuario);
+        } catch (Exception e) {
+            if (e.getMessage().toLowerCase().contains("constraint") || e.getMessage().toLowerCase().contains("duplicate")) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("El correo ya está registrado.");
+            }
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el usuario.");
+        }
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> getUsuario(@PathVariable Long id) {
@@ -50,25 +69,19 @@ public class UsuarioController {
         return usuarioService.getAllUsuarios();
     }
 
-    // 📸 Nuevo método para subir imágenes de perfil
     @PostMapping("/subir-imagen/{id}")
     public ResponseEntity<String> subirImagen(@PathVariable Long id, @RequestParam("imagen") MultipartFile imagen) {
         try {
-            // Crear la carpeta si no existe
-// Ruta real dentro del contexto del servidor
             String carpetaDestino = new File("src/main/resources/static/img/").getAbsolutePath() + "/";
             File directorio = new File(carpetaDestino);
             if (!directorio.exists()) {
                 directorio.mkdirs();
             }
 
-
-            // Guardar la imagen en la carpeta
             String nombreArchivo = imagen.getOriginalFilename();
             String rutaImagen = carpetaDestino + nombreArchivo;
             imagen.transferTo(new File(rutaImagen));
 
-            // Guardar solo la ruta accesible en el usuario
             Optional<Usuario> usuario = usuarioService.getUsuario(id);
             if (usuario.isPresent()) {
                 Usuario usuarioActualizado = usuario.get();
@@ -76,14 +89,13 @@ public class UsuarioController {
                 usuarioService.updateUsuario(usuarioActualizado);
             }
 
-            return ResponseEntity.ok("/uploads/img/" + nombreArchivo); // ✅ CORRECTO
+            return ResponseEntity.ok("/uploads/img/" + nombreArchivo);
         } catch (IOException e) {
-            e.printStackTrace(); // <--- AGREGA ESTA LÍNEA
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al subir imagen");
         }
     }
 
-    // 🖼 Nuevo endpoint para acceder a imágenes
     @GetMapping("/img/{nombreImagen}")
     public ResponseEntity<File> obtenerImagen(@PathVariable String nombreImagen) {
         File imagen = new File("src/main/resources/static/img/" + nombreImagen);
@@ -91,5 +103,61 @@ public class UsuarioController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(imagen);
+    }
+
+    // ✅ Corregido: usa ResetearContrasenaRequest
+    @PostMapping("/resetear-contrasena")
+    public ResponseEntity<String> resetearContrasena(@RequestBody ResetearContrasenaRequest request) {
+        String token = request.getToken();
+        String nuevaClave = request.getNuevaClave();
+
+        Optional<Usuario> optionalUsuario = usuarioService.getUsuarioPorToken(token);
+
+        if (optionalUsuario.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token inválido o expirado");
+        }
+
+        Usuario usuario = optionalUsuario.get();
+
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA-1");
+            byte[] hash = md.digest(nuevaClave.getBytes());
+            String claveEncriptada = Base64.getEncoder().encodeToString(hash);
+
+            usuario.setClave(claveEncriptada);
+            usuario.setTokenRecuperacion(null);
+            usuarioService.updateUsuario(usuario);
+
+            return ResponseEntity.ok("Contraseña actualizada correctamente");
+        } catch (NoSuchAlgorithmException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al encriptar la contraseña");
+        }
+    }
+
+    @PostMapping("/recuperar-contrasena")
+    public ResponseEntity<String> recuperarContrasena(@RequestBody RecuperarContrasenaRequest request) {
+        Optional<Usuario> usuarioOpt = usuarioService.getUsuarioPorEmail(request.getEmail());
+
+        if (usuarioOpt.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Correo no encontrado");
+        }
+
+        Usuario usuario = usuarioOpt.get();
+        String token = UUID.randomUUID().toString();
+        usuario.setTokenRecuperacion(token);
+        usuarioService.updateUsuario(usuario);
+
+        String enlace = "http://localhost:5173/reset-password?token=" + token;
+
+        emailService.enviarCorreo(
+                usuario.getMail(),
+                "Recuperación de contraseña - Huellitas",
+                "Hola " + usuario.getNombreUsuario() + ",\n\n" +
+                        "Hacé clic en el siguiente enlace para restablecer tu contraseña:\n" +
+                        enlace + "\n\nEste enlace es válido por 1 hora."
+        );
+
+        return ResponseEntity.ok("Correo de recuperación enviado");
     }
 }
