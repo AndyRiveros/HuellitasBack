@@ -1,3 +1,4 @@
+// Usuario.java
 package com.example.tpLabo.entities;
 
 import com.example.tpLabo.Enums.Rol;
@@ -21,9 +22,14 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nombreUsuario;
+
     private String clave;
+
+    @Column(unique = true) // ✅ No se permiten dos usuarios con el mismo mail
     private String mail;
+
     private String nombre;
     private String apellido;
     private String direccion;
@@ -33,13 +39,14 @@ public class Usuario {
     @Enumerated(EnumType.STRING)
     private Rol rol;
 
-    private String imagenPerfil; // Nueva propiedad para la foto de perfil
+    private String imagenPerfil;
+
+    private String tokenRecuperacion;
 
     public void setImagenPerfil(String imagenPerfil) {
         this.imagenPerfil = imagenPerfil;
     }
 
-    // Método para encriptar la clave
     public String encriptarClave(String clave) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("SHA-1");
         byte[] hash = md.digest(clave.getBytes());

@@ -17,7 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 @RestController
 @RequestMapping("/api/mercado_pago")
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
+
 public class MercadoPagoController {
 
     @Autowired

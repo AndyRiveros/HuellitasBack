@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
+
 public class PedidoDetalleController {
 
     private final PedidoDetalleService pedidoDetalleService;

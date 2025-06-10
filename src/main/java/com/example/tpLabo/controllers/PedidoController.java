@@ -20,7 +20,8 @@ import java.sql.SQLException;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:5173")
+
 public class PedidoController {
 
     private final PedidoService pedidoService;
