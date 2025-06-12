@@ -22,7 +22,6 @@ import com.example.tpLabo.services.UsuarioService;
 import com.example.tpLabo.services.EmailService;
 
 @RestController
-
 @RequestMapping("/usuarios")
 public class UsuarioController {
 
@@ -91,7 +90,6 @@ public class UsuarioController {
         return ResponseEntity.ok(imagen);
     }
 
-    // ✅ Corregido: usa ResetearContrasenaRequest
     @PostMapping("/resetear-contrasena")
     public ResponseEntity<String> resetearContrasena(@RequestBody ResetearContrasenaRequest request) {
         String token = request.getToken();
@@ -163,6 +161,16 @@ public class UsuarioController {
         if (usuarioService.existsByMail(usuario.getMail())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("El correo ya está en uso.");
         }
+        if (usuarioService.existsByNombreUsuario(usuario.getNombreUsuario())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El nombre de usuario ya está en uso.");
+        }
+        if (usuarioService.existsByDNI(usuario.getDNI())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El DNI ya está en uso.");
+        }
+        if (usuarioService.existsByTelefono(usuario.getTelefono())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El teléfono ya está en uso.");
+        }
+
         try {
             Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
             return ResponseEntity.ok(nuevoUsuario);

@@ -27,10 +27,6 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
-    public Usuario findByNombreUsuario(String nombreUsuario) {
-        return usuarioRepository.findByNombreUsuario(nombreUsuario);
-    }
-
     public Optional<Usuario> getUsuario(Long id) {
         return usuarioRepository.findById(id);
     }
@@ -73,24 +69,27 @@ public class UsuarioService {
         }
     }
 
-    // 🔐 Para recuperar por token
     public Optional<Usuario> getUsuarioPorToken(String token) {
         return usuarioRepository.findByTokenRecuperacion(token);
     }
 
-    // 🔐 Para recuperar por email
     public Optional<Usuario> getUsuarioPorEmail(String email) {
         return usuarioRepository.findByMail(email);
     }
 
-    // no repetir mail
     public boolean existsByMail(String mail) {
         return usuarioRepository.findByMail(mail).isPresent();
     }
 
     public boolean existsByNombreUsuario(String nombreUsuario) {
-        return usuarioRepository.findByNombreUsuario(nombreUsuario) != null;
+        return usuarioRepository.findByNombreUsuario(nombreUsuario).isPresent();
     }
 
+    public boolean existsByDNI(Long dni) {
+        return usuarioRepository.findByDNI(dni).isPresent();
+    }
 
+    public boolean existsByTelefono(String telefono) {
+        return usuarioRepository.findByTelefono(telefono).isPresent();
+    }
 }
