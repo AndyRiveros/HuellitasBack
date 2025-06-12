@@ -1,6 +1,7 @@
 package com.example.tpLabo.entities;
 
 import com.example.tpLabo.Enums.Rol;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +10,9 @@ import lombok.Setter;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,6 +49,10 @@ public class Usuario {
     private String imagenPerfil;
 
     private String tokenRecuperacion;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Mascota> mascotas = new ArrayList<>();
 
     public void setImagenPerfil(String imagenPerfil) {
         this.imagenPerfil = imagenPerfil;
