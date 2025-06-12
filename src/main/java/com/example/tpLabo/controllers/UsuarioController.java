@@ -57,7 +57,7 @@ public class UsuarioController {
     @PostMapping("/subir-imagen/{id}")
     public ResponseEntity<String> subirImagen(@PathVariable Long id, @RequestParam("imagen") MultipartFile imagen) {
         try {
-            String carpetaDestino = new File("src/main/resources/static/img/").getAbsolutePath() + "/";
+            String carpetaDestino = new File("uploads/img/").getAbsolutePath() + "/";
             File directorio = new File(carpetaDestino);
             if (!directorio.exists()) {
                 directorio.mkdirs();
