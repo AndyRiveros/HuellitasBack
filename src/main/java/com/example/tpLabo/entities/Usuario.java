@@ -1,4 +1,3 @@
-// Usuario.java
 package com.example.tpLabo.entities;
 
 import com.example.tpLabo.Enums.Rol;
@@ -23,18 +22,23 @@ public class Usuario {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true)
     private String nombreUsuario;
 
     private String clave;
 
-    @Column(unique = true) // ✅ No se permiten dos usuarios con el mismo mail
+    @Column(unique = true)
     private String mail;
 
     private String nombre;
     private String apellido;
     private String direccion;
+
+    @Column(unique = true)
     private Long DNI;
-    private Long telefono;
+
+    @Column(unique = true)
+    private String telefono;
 
     @Enumerated(EnumType.STRING)
     private Rol rol;
