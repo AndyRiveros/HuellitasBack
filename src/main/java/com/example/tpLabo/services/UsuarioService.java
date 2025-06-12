@@ -80,6 +80,17 @@ public class UsuarioService {
 
     // 🔐 Para recuperar por email
     public Optional<Usuario> getUsuarioPorEmail(String email) {
-        return Optional.ofNullable(usuarioRepository.findByMail(email));
+        return usuarioRepository.findByMail(email);
     }
+
+    // no repetir mail
+    public boolean existsByMail(String mail) {
+        return usuarioRepository.findByMail(mail).isPresent();
+    }
+
+    public boolean existsByNombreUsuario(String nombreUsuario) {
+        return usuarioRepository.findByNombreUsuario(nombreUsuario) != null;
+    }
+
+
 }
