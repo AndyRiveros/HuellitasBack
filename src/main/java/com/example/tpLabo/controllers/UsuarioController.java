@@ -32,20 +32,6 @@ public class UsuarioController {
     @Autowired
     private EmailService emailService;
 
-    @PostMapping
-    public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario) {
-        try {
-            Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
-            return ResponseEntity.ok(nuevoUsuario);
-        } catch (Exception e) {
-            if (e.getMessage().toLowerCase().contains("constraint") || e.getMessage().toLowerCase().contains("duplicate")) {
-                return ResponseEntity.status(HttpStatus.CONFLICT).body("El correo ya está registrado.");
-            }
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el usuario.");
-        }
-    }
-
-
     @GetMapping("/{id}")
     public ResponseEntity<Usuario> getUsuario(@PathVariable Long id) {
         Optional<Usuario> usuario = usuarioService.getUsuario(id);
@@ -159,5 +145,29 @@ public class UsuarioController {
         );
 
         return ResponseEntity.ok("Correo de recuperación enviado");
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createUsuario(@RequestBody Usuario usuario) {
+        if (usuario.getNombreUsuario() == null || usuario.getNombreUsuario().isEmpty() ||
+                usuario.getClave() == null || usuario.getClave().isEmpty() ||
+                usuario.getMail() == null || usuario.getMail().isEmpty() ||
+                usuario.getNombre() == null || usuario.getNombre().isEmpty() ||
+                usuario.getApellido() == null || usuario.getApellido().isEmpty() ||
+                usuario.getDireccion() == null || usuario.getDireccion().isEmpty() ||
+                usuario.getDNI() == null ||
+                usuario.getTelefono() == null) {
+            return ResponseEntity.badRequest().body("Faltan campos obligatorios.");
+        }
+
+        if (usuarioService.existsByMail(usuario.getMail())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("El correo ya está en uso.");
+        }
+        try {
+            Usuario nuevoUsuario = usuarioService.createUsuario(usuario);
+            return ResponseEntity.ok(nuevoUsuario);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al crear el usuario.");
+        }
     }
 }
